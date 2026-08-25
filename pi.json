@@ -1,0 +1,14 @@
+{
+  "app_name": "Resurrected Building Projects",
+  "display_name": "Resurrected Building Projects",
+  "description": "Full-service construction company in South Africa - House building, renovations, roofing, plumbing. Manage projects, track progress, and pay contractors with Pi Network.",
+  "category": "Construction & Real Estate",
+  "tags": ["construction", "building", "renovation", "south-africa", "pi-payment"],
+  "developer": "Ndhlovu36",
+  "version": "1.0.0",
+  "ecosystem_apps": ["Marble Floors South Africa", "Agricultural Equipment Market"],
+  "features": ["Pi Payments", "Project Tracking", "Contractor Booking", "Material Supply"],
+  "services": ["House Building", "Renovations", "Roofing", "Building Plans"],
+  "region": "Gauteng, South Africa",
+  "hackathon_track": "Real World Utility"
+}
