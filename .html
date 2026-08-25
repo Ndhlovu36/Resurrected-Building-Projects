@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RESURRECTED BUILDING PROJECTS</title>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script>Pi.init({ version: "2.0", sandbox: false })</script>
+<style>
+body{font-family:Arial,sans-serif;margin:0;background:#0d213f;color:#fff}
+header{padding:30px;text-align:center;background:#102a52}
+header h1{margin:0;font-size:32px}
+header p{color:#f9c23c}
+.hero{padding:60px 20px;text-align:center}
+.hero h2{font-size:28px}
+.btn{background:#f9c23c;color:#0d213f;padding:15px 30px;border:none;border-radius:30px;font-weight:bold;font-size:16px;cursor:pointer;margin:10px}
+section{padding:40px 20px;max-width:1000px;margin:auto}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.card{background:#122f5a;padding:20px;border-radius:12px}
+footer{text-align:center;padding:20px;background:#08162c;font-size:13px}
+a{color:#f9c23c;text-decoration:none}
+</style>
+</head>
+<body>
+
+<header>
+<h1>RESURRECTED BUILDING PROJECTS</h1>
+<p>Restoring abandoned structures across SA</p>
+</header>
+
+<div class="hero">
+<h2>From Ruins to Ready</h2>
+<p>We buy abandoned, stalled and distressed building projects, restore them, and bring them back to life for homes and businesses.</p>
+<br>
+<button class="btn" onclick="payWithPi()">Pay with Pi</button>
+<button class="btn" onclick="authWithPi()">Login with Pi</button>
+</div>
+
+<section>
+<div class="cards">
+<div class="card"><h3>🏚️ Abandoned Buildings</h3><p>We acquire unfinished and abandoned sites and resurrect them.</p></div>
+<div class="card"><h3>🏗️ Restoration</h3><p>Full construction, roofing, plumbing, electrical & finishing.</p></div>
+<div class="card"><h3>🏠 Resale & Rental</h3><p>Quality affordable homes and business spaces for the community.</p></div>
+</div>
+</section>
+
+<section>
+<h2>Our Services</h2>
+<ul>
+<li>Stalled Project Takeover</li>
+<li>Building Restoration & Renovation</li>
+<li>Site Security & Assessment</li>
+<li>Property Development Consultation</li>
+</ul>
+<p>Contact: <b>resurrected.building.projects@gmail.com</b> | Bloemfontein, FS</p>
+<p><a href="legal.html">Privacy Policy & Terms</a> | <a href="report.html">Support</a></p>
+</section>
+
+<footer>© 2026 RESURRECTED BUILDING PROJECTS | Pi Network Ecosystem App</footer>
+
+<script>
+async function authWithPi(){
+  try{
+    const scopes = ['username','payments'];
+    const auth = await Pi.authenticate(scopes, onIncompletePaymentFound);
+    alert('Welcome ' + auth.user.username);
+  }catch(e){alert('Auth failed: '+e)}
+}
+async function payWithPi(){
+  try{
+    const payment = await Pi.createPayment({
+      amount: 1,
+      memo: "Consultation fee - Resurrected Building Projects",
+      metadata: { type: "consultation" }
+    },{
+      onReadyForServerApproval: function(paymentId){console.log(paymentId)},
+      onReadyForServerCompletion: function(paymentId,txid){console.log(paymentId,txid)},
+      onCancel: function(paymentId){},
+      onError: function(error, payment){}
+    });
+  }catch(e){alert(e)}
+}
+function onIncompletePaymentFound(payment){console.log(payment)}
+</script>
+</body>
+</html>
