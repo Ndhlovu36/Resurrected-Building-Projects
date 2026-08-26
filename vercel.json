@@ -1,0 +1,4 @@
+{
+  "name": "resurrected-building-projects",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
