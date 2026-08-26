@@ -1,0 +1,16 @@
+{
+  "name": "Resurrected Building Projects",
+  "short_name": "Resurrected",
+  "description": "Construction & renovations in Gauteng - Pi powered",
+  "start_url": "/resurrected-building-projects/",
+  "display": "standalone",
+  "background_color": "#3e2723",
+  "theme_color": "#3e2723",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2992/2992406.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
