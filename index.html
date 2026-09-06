@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Building Projects - Pay with Pi</title>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script>Pi.init({version:"2.0", sandbox:false});</script>
+<style>
+body{margin:0;font-family:Arial;background:#f5f5f5;display:flex;justify-content:center}
+.card{background:white;max-width:380px;width:90%;margin:20px;padding:20px;border-radius:15px;box-shadow:0 4px 15px rgba(0,0,0,0.1)}
+h2{margin:0 0 10px 0;font-size:26px}
+.login{width:100%;background:#ffeb3b;border:none;padding:14px;border-radius:10px;font-weight:bold;font-size:16px;margin:12px 0}
+input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:10px;box-sizing:border-box;font-size:15px}
+.quote{width:100%;background:#111;color:white;border:none;padding:14px;border-radius:10px;font-weight:bold;font-size:16px;margin-top:10px}
+.book{border:1px solid gold;padding:8px;margin-top:8px;border-radius:8px;font-size:13px;background:#fffde7}
+</style>
+</head>
+<body>
+<div class="card">
+<h2>Get Instant Quote</h2>
+<p id="user">Not logged in</p>
+<button class="login" onclick="login()">Login with Pi</button>
+<input id="from" placeholder="Project Location (e.g. Johannesburg)">
+<input id="to" placeholder="Site Address / City">
+<select id="parcel">
+<option value="House Building">🏠 House Building</option>
+<option value="Renovation">🔨 Renovation</option>
+<option value="Plumbing">🚿 Plumbing</option>
+<option value="Electrical">💡 Electrical</option>
+<option value="Roofing">🏗️ Roofing</option>
+<option value="Painting">🎨 Painting</option>
+</select>
+<input id="phone" placeholder="Phone (WhatsApp)">
+<button class="quote" onclick="pay()">Get Quote for 1 Pi</button>
+<h3 style="margin-top:15px;font-size:14px">My Quotes (Locally Saved)</h3>
+<div id="myBookings">No quotes yet</div>
+</div>
+<script>
+let currentUser=null;
+const S={save:(k,d)=>{try{localStorage.setItem(k,JSON.stringify(d))}catch(e){}},get:(k)=>{try{let v=localStorage.getItem(k);return v?JSON.parse(v):null}catch(e){return null}}};
+function login(){Pi.authenticate(['username','payments'],p=>{if(p)fetch('/api/complete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId:p.identifier,txid:p.transaction.txid})})}).then(a=>{currentUser=a.user;document.getElementById('user').innerText='Hello '+a.user.username;S.save('u_build',a.user)}).catch(e=>alert(e))}
+function render(){let all=S.get('b_build')||[];document.getElementById('myBookings').innerHTML=all.length?all.slice().reverse().map(b=>`<div class="book">${b.type} - ${b.from} to ${b.to} - ${b.status}</div>`).join(''):'No quotes yet'}
+function pay(){let from=document.getElementById('from').value,to=document.getElementById('to').value,type=document.getElementById('parcel').value,phone=document.getElementById('phone').value;if(!from||!to)return alert('Enter location and site');if(!phone)return alert('Enter phone');if(!currentUser)return alert('Login first');let all=S.get('b_build')||[];all.push({from,to,type,phone,status:'pending',date:new Date().toISOString()});S.save('b_build',all);render();Pi.createPayment({amount:1,memo:'Quote for '+type+' at '+from,metadata:{from,to,type,phone}},{onReadyForServerApproval:id=>{fetch('/api/approve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId:id})})},onReadyForServerCompletion:(id,txid)=>{fetch('/api/complete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paymentId:id,txid})}).then(()=>{let all=S.get('b_build')||[];all[all.length-1].status='PAID '+txid.slice(0,8);S.save('b_build',all);alert('SUCCESS! Quote paid. We will call you on '+phone+' Tx:'+txid);render()})},onCancel:()=>alert('Cancelled'),onError:e=>alert(e.message)})}
+window.addEventListener('load',()=>{let u=S.get('u_build');if(u){currentUser=u;document.getElementById('user').innerText='Hello '+u.username}render()})
+</script>
+</body>
+</html>
