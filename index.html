@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Resurrected Building Projects</title>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script>let NETWORK='mainnet'; Pi.init({version:"2.0", sandbox:false});</script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial;background:#f5f5f5;display:flex;flex-direction:column;align-items:center}
+.header{width:100%;max-width:420px;background:#111;color:white;padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+.header h1{font-size:16px;margin:0}
+.header small{color:#ffeb3b;display:block}
+.header .email{font-size:11px;background:#ffeb3b;color:#111;padding:4px 8px;border-radius:20px;font-weight:bold;text-decoration:none}
+.tabs{width:100%;max-width:420px;display:flex;background:#222}
+.tabs button{flex:1;padding:12px;border:none;font-weight:bold;cursor:pointer;font-size:15px}
+.active-main{background:#ffeb3b;color:#111}
+.active-test{background:#4caf50;color:white}
+.inactive{background:#333;color:#aaa}
+.badges{width:100%;max-width:420px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;background:white;padding:8px}
+.badge{background:#f0f0f0;border:1px solid #ddd;border-radius:20px;padding:4px 10px;font-size:12px;font-weight:bold}
+.card{background:white;max-width:380px;width:90%;margin:15px;padding:20px;border-radius:15px;box-shadow:0 4px 15px rgba(0,0,0,0.1)}
+.login{width:100%;background:#ffeb3b;border:none;padding:14px;border-radius:10px;font-weight:bold;font-size:16px;margin:12px 0;cursor:pointer}
+input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:10px;font-size:15px}
+.quote{width:100%;background:#111;color:white;border:none;padding:14px;border-radius:10px;font-weight:bold;font-size:16px;margin-top:10px;cursor:pointer}
+.clear-btn{width:100%;background:#e53935;color:white;border:none;padding:12px;border-radius:10px;font-weight:bold;margin-top:10px;cursor:pointer}
+.book{border:1px solid gold;padding:8px;margin-top:8px;border-radius:8px;font-size:13px;background:#fffde7}
+.save-row{display:flex;align-items:center;gap:8px;font-size:14px;margin:10px 0}
+.topbar{background:#1e88e5;color:white;display:flex;align-items:center;justify-content:space-between;padding:10px 12px}
+.topbar select{padding:6px;border-radius:8px;font-weight:bold;font-size:16px;border:2px solid white;background:white}
+.company-banner{background:#1e88e5;color:white;text-align:center;padding:10px;font-weight:bold;font-size:18px}
+.company-banner small{font-weight:normal;font-size:14px}
+.page{background:white;max-width:420px;margin:0 auto;min-height:100vh;padding-bottom:20px}
+.section{padding:12px 14px}
+h2{text-align:center;text-decoration:underline;margin:10px 0}
+.btn{background:#111;color:white;border:none;padding:6px 10px;border-radius:6px;font-weight:bold;cursor:pointer;margin:4px 2px}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{border:1px solid #999;padding:6px;text-align:center;font-size:13px}
+th{background:#f5f5f5}
+.totals{text-align:right;margin-top:10px;font-size:15px}
+.totals div{margin:6px 0}
+.totals b{font-size:18px}
+.balance-line{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.footer{text-align:center;padding:15px 10px;border-top:2px solid #eee;margin-top:20px}
+.footer h1{color:#0d2c6b;margin:5px 0 0 0;font-size:22px;line-height:1}
+.footer h1 span{display:block;font-size:18px}
+.footer p{margin:3px 0;font-size:13px;font-weight:bold}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<!-- MAIN QUOTE PAGE -->
+<div id="mainPage" style="width:100%;display:flex;flex-direction:column;align-items:center">
+<div class="header">
+  <div>
+    <h1>RESURRECTED<br>BUILDING PROJECTS</h1>
+    <small>Reg: 2024/246504/07</small>
+    <small>Quality • Trust • Guaranteed</small>
+  </div>
+  <a class="email" href="mailto:resurrectedbuildings@gmail.com">Email Us</a>
+</div>
+<div class="tabs">
+  <button id="tabMain" class="active-main" onclick="setNetwork('mainnet')">Mainnet</button>
+  <button id="tabTest" class="inactive" onclick="setNetwork('testnet')">Testnet</button>
+</div>
+<div class="badges">
+  <span class="badge">✅ ISO20020</span>
+  <span class="badge">📋 OPE STANDARDS</span>
+  <span class="badge">🟡 PI VERIFIED</span>
+</div>
+<div class="card">
+<h2>Get Instant Quote</h2>
+<p id="user">Not logged in</p>
+<p id="netLabel" style="font-size:13px;color:green;font-weight:bold">Network: Mainnet</p>
+<button class="login" onclick="login()">Login with Pi</button>
+<input id="from" placeholder="Project Location (e.g. Johannesburg)">
+<input id="to" placeholder="Site Address / City">
+<input id="clientName" placeholder="Client Full Name">
+<input id="clientEmail" type="email" placeholder="Client Email Address">
+<select id="parcel">
+<option value="House Building">🏠 House Building</option>
+<option value="Renovation">🔨 Renovation</option>
+<option value="Plumbing">🚿 Plumbing</option>
+<option value="Electrical">💡 Electrical</option>
+<option value="Roofing">🏗️ Roofing</option>
+<option value="Painting">🎨 Painting</option>
+<option value="Torch-on Waterproofing">💧 Torch-on Waterproofing</option>
+<option value="Tiling">🧱 Tiling</option>
+<option value="Rockface">🪨 Rockface</option>
+<option value="Clading">🏢 Clading</option>
+<option value="Ceiling">🏠 Ceiling</option>
+<option value="PVC Ceiling">⬜ PVC Ceiling</option>
+<option value="Suspended Ceiling">🔳 Suspended Ceiling</option>
+<option value="Plastering">🧱 Plastering</option>
+<option value="Steel Fixing">🔩 Steel Fixing</option>
+</select>
+<input id="phone" placeholder="Phone (WhatsApp)">
+<input id="jobAmount" type="number" step="0.01" placeholder="Job Amount in Pi (e.g. 15)">
+<div class="save-row"><input type="checkbox" id="saveInfo" checked style="width:auto;margin:0"><label for="saveInfo">Save client information</label></div>
+<button class="quote" onclick="pay()">Get A QUOTE</button>
+<button class="clear-btn" onclick="clearPendingPayment()">Clear Pending Payment</button>
+<button class="quote" style="background:#1e88e5" onclick="openInvoice()">Open Invoice / Receipt</button>
+<h3 style="margin-top:15px;font-size:14px">My Quotes</h3>
+<div id="myBookings">No quotes yet</div>
+</div>
+</div>
+
+<!-- INVOICE PAGE -->
+<div id="invoicePage" class="hidden" style="width:100%">
+<div class="topbar">
+  <div onclick="closeInvoice()" style="font-size:22px;cursor:pointer">☰</div>
+  <select id="docType" onchange="switchDoc()">
+    <option value="quotation">Quotation</option>
+    <option value="receipt" selected>Reciept</option>
+  </select>
+  <div>🔔 🖨 ✈</div>
+</div>
+<div class="company-banner">
+  Resurrected Building Projects<br>
+  <small>resurrectedbuildings@gmail.com</small>
+</div>
+<div class="badges">
+  <span class="badge">✅ ISO20020</span>
+  <span class="badge">📋 OPE STANDARDS</span>
+  <span class="badge">🟡 PI VERIFIED</span>
+</div>
+<div class="page">
+<div class="section">
+  <h2 id="docTitle">Invoice</h2>
+  <div style="display:flex;gap:10px">
+    <div style="flex:1"><label>Invoice No:</label><input type="text" id="invNo" value="654"></div>
+    <div style="flex:1"><label>Date:</label><input type="text" id="invDate"></div>
+  </div>
+  <label>Bill To</label>
+  <input type="text" id="billName" placeholder="Client Name (e.g. Mr John Vickey)">
+  <input type="text" id="billAddress" placeholder="Address">
+  <input type="text" id="billContact" placeholder="phone, email">
+  <button class="btn" onclick="pickClient()">Pick Client</button>
+  <table id="itemsTable">
+    <tr><th>Description</th><th>Quantity</th><th>Unit Price (Pi)</th><th>Unit</th><th>Price (Pi)</th><th></th></tr>
+  </table>
+  <button class="btn" onclick="addItem()">+ Item</button>
+  <button class="btn" onclick="addFromList()">+ From list</button>
+  <div class="totals">
+    <div>Sub Total: <b id="subTotal">00</b> Pi</div>
+    <div>GST: <input type="number" id="gst" value="0" style="width:50px;display:inline;padding:6px" oninput="calc()"> % &nbsp; <span id="gstVal">00</span> Pi</div>
+    <div>Extras: <input type="number" id="extras" value="0" style="width:60px;display:inline;padding:6px" oninput="calc()"> <span id="extrasVal">00</span> Pi</div>
+    <hr>
+    <div>Total: <b id="grandTotal">00</b> Pi</div>
+  </div>
+  <div style="margin-top:12px"><b>Payment Type</b><br>
+    <label><input type="checkbox" checked> Pi</label>
+    <label><input type="checkbox"> Cash</label>
+    <label><input type="checkbox"> Card</label>
+    <label><input type="checkbox"> Bank Transfer</label>
+  </div>
+  <div class="balance-line">
+    <span>Received:</span> <input type="number" id="received" value="0" style="width:80px;padding:6px" oninput="calcBalance()"> <b><span id="receivedVal">00</span> Pi</b>
+  </div>
+  <div class="balance-line">
+    <b>Balance:</b> <span><b id="balanceVal">00</b> Pi</span>
+  </div>
+  <div style="margin-top:12px"><b>Comments:</b><br><button class="btn" onclick="addComment()">+ Comments</button><div id="commentList" style="font-size:13px;margin-top:6px"></div></div>
+  <div style="margin-top:10px"><b>Received by:</b> <input type="text" id="receivedBy" placeholder="___________" style="width:150px;display:inline;border:none;border-bottom:1px solid #999;padding:6px"></div>
+  <p style="text-align:center;font-style:italic;margin-top:20px">Thank You for visiting us</p>
+  <div style="display:flex;gap:8px;margin-top:10px">
+    <button style="flex:1;background:#111;color:white;padding:12px;border:none;border-radius:10px;font-weight:bold" onclick="window.print()">Print</button>
+    <button style="flex:1;background:#4caf50;color:white;padding:12px;border:none;border-radius:10px;font-weight:bold" onclick="payFromInvoice()">Pay Total with Pi</button>
+    <button style="flex:1;background:#ccc;padding:12px;border:none;border-radius:10px;font-weight:bold" onclick="closeInvoice()">Back</button>
+  </div>
+</div>
+<div class="footer">
+  <div style="font-size:42px">🏢</div>
+  <p>0607263726 &nbsp; resurrectedbuildings@gmail.com</p>
+  <p>1691 Gordon Road, Henley On Klip, Meyerton, Gauteng, 1961</p>
+  <h1>RESURRECTED <span>BUILDING PROJECTS</span></h1>
+  <p style="font-size:11px;margin-top:8px">Reg: 2024/246504/07</p>
+</div>
+</div>
+</div>
+
+<script>
+let currentUser=null;
+const S={save:(k,d)=>{try{localStorage.setItem(k,JSON.stringify(d))}catch(e){}},get:(k)=>{try{let v=localStorage.getItem(k);return v?JSON.parse(v):null}catch(e){return null}}};
+
+function setNetwork(net){
+  NETWORK=net;
+  if(net==='mainnet'){
+    Pi.init({version:"2.0", sandbox:false});
+    document.getElementById('tabMain').className='active-main';
+    document.getElementById('tabTest').className='inactive';
+    document.getElementById('netLabel').innerText='Network: Mainnet';
+  } else {
+    Pi.init({version:"2.0", sandbox:true});
+    document.getElementById('tabTest').className='active-test';
+    document.getElementById('tabMain').className='inactive';
+    document.getElementById('netLabel').innerText='Network: Testnet';
+  }
+}
+
+async function login(){
+  try{
+    const auth = await Pi.authenticate(['username','payments'], function(payment){});
+    currentUser = auth.user;
+    document.getElementById('user').innerText='Hello '+auth.user.username;
+    S.save('u_build', auth.user);
+    let saved=S.get('clientInfo_build');
+    if(saved){
+      document.getElementById('clientName').value=saved.name||'';
+      document.getElementById('clientEmail').value=saved.email||'';
+      document.getElementById('phone').value=saved.phone||'';
+      document.getElementById('from').value=saved.from||'';
+    }
+  }catch(e){ alert('Login failed: '+e.message); }
+}
+
+function render(){
+  let all=S.get('b_build')||[];
+  document.getElementById('myBookings').innerHTML = all.length ? all.slice().reverse().map((b,i)=>{
+    return `<div class="book">${b.type} - ${b.from} - ${b.amount} Pi - ${b.status} <br><small>${b.email||''}</small></div>`;
+  }).join('') : 'No quotes yet';
+}
+
+function clearPendingPayment(){
+  if(!confirm('Clear all pending payments?')) return;
+  S.save('b_build', []);
+  localStorage.removeItem('pending_pi');
+  render();
+  alert('Pending payments cleared.');
+}
+
+async function pay(){
+  let from=document.getElementById('from').value.trim(),
+      to=document.getElementById('to').value.trim(),
+      type=document.getElementById('parcel').value,
+      phone=document.getElementById('phone').value.trim(),
+      email=document.getElementById('clientEmail').value.trim(),
+      name=document.getElementById('clientName').value.trim(),
+      amount=parseFloat(document.getElementById('jobAmount').value);
+  if(!from||!to) return alert('Enter location and site');
+  if(!phone) return alert('Enter phone');
+  if(!email) return alert('Enter client email');
+  if(!amount || amount<=0) return alert('Enter job amount in Pi according to job scale');
+  if(!currentUser) return alert('Login first');
+  if(document.getElementById('saveInfo').checked){ S.save('clientInfo_build',{name:name,email:email,phone:phone,from:from}); }
+  let all=S.get('b_build')||[];
+  let newItem={from:from,to:to,type:type,phone:phone,email:email,name:name,amount:amount,status:'pending',date:new Date().toISOString(),network:NETWORK};
+  all.push(newItem); S.save('b_build',all); S.save('pending_pi', newItem); render();
+  try{
+    await Pi.createPayment({amount:amount, memo:'Quote for '+type+' at '+from, metadata:{from:from,to:to,type:type,phone:phone,email:email,name:name,amount:amount,network:NETWORK}},
+    {
+      onReadyForServerApproval: function(paymentId){},
+      onReadyForServerCompletion: function(paymentId, txid){
+        let all2=S.get('b_build')||[];
+        all2[all2.length-1].status='PAID';
+        all2[all2.length-1].txid=txid;
+        S.save('b_build',all2);
+        localStorage.removeItem('pending_pi');
+        alert('SUCCESS! Payment received. Tx: '+txid);
+        render();
+      },
+      onCancel: function(){ alert('Cancelled'); render(); },
+      onError: function(e){ alert('Error: '+e.message); render(); }
+    });
+  }catch(e){ alert('Payment failed: '+e.message); }
+}
+
+function openInvoice(){
+  document.getElementById('mainPage').classList.add('hidden');
+  document.getElementById('invoicePage').classList.remove('hidden');
+  let saved=S.get('clientInfo_build');
+  if(saved){
+    document.getElementById('billName').value=saved.name||'';
+    document.getElementById('billContact').value=(saved.phone||'')+', '+(saved.email||'');
+    document.getElementById('billAddress').value=saved.from||'';
+  }
+  calc();
+}
+function closeInvoice(){
+  document.getElementById('invoicePage').classList.add('hidden');
+  document.getElementById('mainPage').classList.remove('hidden');
+}
+function switchDoc(){
+  let v=document.getElementById('docType').value;
+  document.getElementById('docTitle').innerText = v==='receipt' ? 'Receipt' : 'Quotation';
+}
+function addItem(desc,qty,price,unit){
+  if(desc===undefined) desc='';
+  if(qty===undefined) qty=1;
+  if(price===undefined) price=0;
+  if(unit===undefined) unit='--';
+  let t=document.getElementById('itemsTable');
+  let r=t.insertRow(-1);
+  r.innerHTML='<td><input type="text" value="'+desc+'" style="width:90px;padding:6px" oninput="calc()"></td>'+
+  '<td><input type="number" value="'+qty+'" style="width:50px;padding:6px" oninput="calc()"></td>'+
+  '<td><input type="number" value="'+price+'" style="width:60px;padding:6px" oninput="calc()"></td>'+
+  '<td>'+unit+'</td>'+
+  '<td class="rowPrice">00</td>'+
+  '<td><button onclick="this.parentElement.parentElement.remove();calc()" style="background:red;color:white;border:none;border-radius:4px">x</button></td>';
+  calc();
+}
+function addFromList(){
+  let services=["House Building","Renovation","Plumbing","Electrical","Roofing","Painting","Tiling","Plastering"];
+  let s=prompt("Pick service:\n"+services.join(", "));
+  if(s) addItem(s,1,0,'--');
+}
+function calc(){
+  let t=document.getElementById('itemsTable');
+  let sub=0;
+  for(let i=1;i<t.rows.length;i++){
+    let q=parseFloat(t.rows[i].cells[1].firstChild.value)||0;
+    let p=parseFloat(t.rows[i].cells[2].firstChild.value)||0;
+    let total=q*p;
+    t.rows[i].cells[4].innerText=total.toFixed(2);
+    sub+=total;
+  }
+  document.getElementById('subTotal').innerText=sub.toFixed(2);
+  let gstPct=parseFloat(document.getElementById('gst').value)||0;
+  let gstVal=sub*gstPct/100;
+  document.getElementById('gstVal').innerText=gstVal.toFixed(2);
+  let extras=parseFloat(document.getElementById('extras').value)||0;
+  document.getElementById('extrasVal').innerText=extras.toFixed(2);
+  let grand=sub+gstVal+extras;
+  document.getElementById('grandTotal').innerText=grand.toFixed(2);
+  calcBalance();
+}
+function calcBalance(){
+  let total=parseFloat(document.getElementById('grandTotal').innerText)||0;
+  let recv=parseFloat(document.getElementById('received').value)||0;
+  document.getElementById('receivedVal').innerText=recv.toFixed(2);
+  document.getElementById('balanceVal').innerText=(total-recv).toFixed(2);
+}
+function addComment(){
+  let c=prompt("Enter comment:");
+  if(c){document.getElementById('commentList').innerHTML+='<div>• '+c+'</div>'}
+function pickClient(){
+  let saved=S.get('clientInfo_build');
+  if(saved){
+    document.getElementById('billName').value=saved.name||'';
+    document.getElementById('billContact').value=(saved.phone||'')+', '+(saved.email||'');
+    document.getElementById('billAddress').value=saved.from||'';
+    alert('Client loaded');
+  } else { alert('No saved client.'); }
+}
+async function payFromInvoice(){
+  let amount=parseFloat(document.getElementById('grandTotal').innerText)||0;
+  if(!amount||amount<=0) return alert('Enter items to get total in Pi');
+  if(!currentUser) return alert('Login first on main page');
+  try{
+    await Pi.createPayment({amount:amount, memo:'Invoice payment '+document.getElementById('invNo').value, metadata:{inv:document.getElementById('invNo').value, amount:amount, network:NETWORK}},
+    {
+      onReadyForServerApproval: function(){},
+      onReadyForServerCompletion: function(paymentId, txid){
+        alert('SUCCESS! Paid '+amount+' Pi. Tx: '+txid);
+        document.getElementById('received').value=amount;
+        calcBalance();
+        window.print();
+      },
+      onCancel: function(){ alert('Cancelled'); },
+      onError: function(e){ alert('Error: '+e.message); }
+    });
+  }catch(e){ alert('Payment failed: '+e.message); }
+}
+window.addEventListener('load',()=>{
+  let u=S.get('u_build');
+  if(u){currentUser=u;document.getElementById('user').innerText='Hello '+u.username}
+  document.getElementById('invDate').value=new Date().toLocaleDateString('en-ZA');
+  addItem('Building Service',1,0,'--');
+  calc();
+  render();
+});
+</script>
+</body>
+</html>
